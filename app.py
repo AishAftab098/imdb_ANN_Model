@@ -464,14 +464,14 @@ with right_col:
 
     st.markdown("### 📈 Prediction Result")
 
-    st.markdown(
+    result_placeholder = st.empty()
+
+    result_placeholder.markdown(
         """
         <div class="result-card">
             <div class="result-label">PREDICTION PREVIEW</div>
             <div class="result-value">—</div>
-            <div class="result-note">
-                Enter the movie details and click the prediction button below.
-            </div>
+            <div class="result-note">Enter the movie details and click the prediction button below.</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -544,20 +544,12 @@ if predict_button:
     # RESULT
     # =====================================================
 
-    st.markdown(
-        f"""
-        <div class="result-card">
-            <div class="result-label">
-                ESTIMATED WORLDWIDE BOX OFFICE
-            </div>
-
-            <div class="result-value">
-                {display_value}
-            </div>
-
-            <div class="result-note">
-                {currency_note}
-            </div>
+    result_placeholder.markdown(
+       f"""
+       <div class="result-card">
+           <div class="result-label">ESTIMATED WORLDWIDE BOX OFFICE</div>
+           <div class="result-value">{display_value}</div>
+           <div class="result-note">{currency_note}</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -610,20 +602,20 @@ if predict_button:
     # RESULT
     # =====================================================
 
-    st.markdown(
-        f"""
-<div class="result-card">
-<div class="result-label">
-ESTIMATED WORLDWIDE BOX OFFICE
-</div>
-<div class="result-value">
-{display_value}
-</div>
-<div class="result-note">
-{currency_note}
-</div>
-</div>
-""",
+    with right_col:
+
+       st.markdown("### 📈 Prediction Result")
+
+       result_placeholder = st.empty()
+
+       result_placeholder.markdown(
+        """
+        <div class="result-card">
+            <div class="result-label">PREDICTION PREVIEW</div>
+            <div class="result-value">—</div>
+            <div class="result-note">Enter the movie details and click the prediction button below.</div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
