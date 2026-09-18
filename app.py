@@ -410,25 +410,18 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 left_col, right_col = st.columns(
     [1.35, 0.9],
     gap="large"
 )
 
-
 # =========================================================
-# LEFT COLUMN
+# LEFT COLUMN - MOVIE FEATURES
 # =========================================================
 
 with left_col:
 
-    st.markdown(
-        '<div class="input-card">',
-        unsafe_allow_html=True
-    )
-
-    st.markdown("### Movie Features")
+    st.markdown("### 🎬 Movie Features")
 
     imdb_rating = st.slider(
         "⭐ IMDb Rating",
@@ -462,11 +455,9 @@ with left_col:
         step=5000
     )
 
-    st.markdown("</div>", unsafe_allow_html=True)
-
 
 # =========================================================
-# RIGHT COLUMN
+# RIGHT COLUMN - PREDICTION PREVIEW
 # =========================================================
 
 with right_col:
@@ -475,14 +466,14 @@ with right_col:
 
     st.markdown(
         """
-<div class="result-card">
-<div class="result-label">PREDICTION PREVIEW</div>
-<div class="result-value">—</div>
-<div class="result-note">
-Enter the movie details and click the prediction button.
-</div>
-</div>
-""",
+        <div class="result-card">
+            <div class="result-label">PREDICTION PREVIEW</div>
+            <div class="result-value">—</div>
+            <div class="result-note">
+                Enter the movie details and click the prediction button below.
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
@@ -500,9 +491,77 @@ button_col1, button_col2, button_col3 = st.columns(
 with button_col2:
 
     predict_button = st.button(
-        "🚀 Predict Box Office Gross"
+        "🚀 Predict Box Office Gross",
+        use_container_width=True
     )
 
+
+# =========================================================
+# PREDICTION
+# =========================================================
+
+if predict_button:
+
+    input_data = np.array([
+        [
+            imdb_rating,
+            metascore,
+            duration,
+            votes
+        ]
+    ])
+
+    scaled_data = scaler.transform(input_data)
+
+    prediction = model.predict(scaled_data)
+
+    final_gross = float(
+        np.asarray(prediction).flatten()[0]
+    )
+
+    final_gross = max(0, final_gross)
+
+    # =====================================================
+    # CURRENCY
+    # =====================================================
+
+    if currency == "INR (₹)":
+
+        display_value = format_inr(
+            final_gross * usd_to_inr
+        )
+
+        currency_note = "Approximate INR conversion"
+
+    else:
+
+        display_value = f"${final_gross:,.2f}"
+
+        currency_note = "Estimated worldwide gross"
+
+
+    # =====================================================
+    # RESULT
+    # =====================================================
+
+    st.markdown(
+        f"""
+        <div class="result-card">
+            <div class="result-label">
+                ESTIMATED WORLDWIDE BOX OFFICE
+            </div>
+
+            <div class="result-value">
+                {display_value}
+            </div>
+
+            <div class="result-note">
+                {currency_note}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # =========================================================
 # PREDICTION
