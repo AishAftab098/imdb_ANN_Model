@@ -4,9 +4,10 @@ import streamlit as st
 import plotly.graph_objects as go
 
 
-# -------------------------------------------------
-# 1. PAGE CONFIGURATION
-# -------------------------------------------------
+# =========================================================
+# PAGE CONFIG
+# =========================================================
+
 st.set_page_config(
     page_title="IMDb Movie Gross Predictor",
     page_icon="🎬",
@@ -15,277 +16,285 @@ st.set_page_config(
 )
 
 
-# -------------------------------------------------
-# 2. CUSTOM PROFESSIONAL LIGHT THEME
-# -------------------------------------------------
+# =========================================================
+# CUSTOM CSS
+# =========================================================
+
 st.markdown("""
 <style>
 
-    /* Main App */
-    .stApp {
-        background-color: #f6f8fc;
-        color: #172033;
-    }
+.stApp {
+    background-color: #F5F7FB;
+    color: #172033;
+}
 
-    .main .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        max-width: 1450px;
-    }
+.main .block-container {
+    max-width: 1250px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
 
-    /* Sidebar */
-    section[data-testid="stSidebar"] {
-        background-color: #eef3fa;
-        border-right: 1px solid #d9e2ef;
-    }
 
-    section[data-testid="stSidebar"] * {
-        color: #1d2b44 !important;
-    }
+/* SIDEBAR */
 
-    /* General Text */
-    h1, h2, h3, h4, h5, h6 {
-        color: #172033 !important;
-    }
+section[data-testid="stSidebar"] {
+    background-color: #EEF3F9;
+    border-right: 1px solid #D8E0EA;
+}
 
-    p, label, span {
-        color: #34435b;
-    }
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    color: #17365D !important;
+}
 
-    /* Hero Section */
-    .hero-card {
-        background: linear-gradient(
-            110deg,
-            #10284b 0%,
-            #1d4778 55%,
-            #376fa6 100%
-        );
-        padding: 32px;
-        border-radius: 18px;
-        margin-bottom: 25px;
-        color: white !important;
-        box-shadow: 0 8px 25px rgba(36, 70, 110, 0.15);
-    }
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] label {
+    color: #334155 !important;
+}
 
-    .hero-card h1 {
-        color: white !important;
-        font-size: 42px;
-        margin-bottom: 8px;
-        font-weight: 750;
-    }
 
-    .hero-card p {
-        color: #e6efff !important;
-        font-size: 17px;
-        margin-bottom: 0;
-    }
+/* NORMAL TEXT */
 
-    .hero-badge {
-        display: inline-block;
-        background-color: rgba(255,255,255,0.15);
-        border: 1px solid rgba(255,255,255,0.3);
-        padding: 6px 13px;
-        border-radius: 20px;
-        font-size: 13px;
-        color: white !important;
-        margin-bottom: 15px;
-    }
+h1, h2, h3, h4 {
+    color: #172033 !important;
+}
 
-    /* Section Cards */
-    .section-card {
-        background-color: white;
-        border: 1px solid #dce5f0;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 5px 18px rgba(38, 64, 98, 0.06);
-        margin-bottom: 20px;
-    }
+p {
+    color: #526174;
+}
 
-    .section-title {
-        font-size: 23px;
-        font-weight: 700;
-        color: #1d3557 !important;
-        margin-bottom: 5px;
-    }
 
-    .section-subtitle {
-        color: #718096 !important;
-        font-size: 14px;
-        margin-bottom: 18px;
-    }
+/* HERO */
 
-    /* Inputs */
-    div[data-baseweb="input"] {
-        border-radius: 9px;
-    }
+.hero {
+    background: linear-gradient(135deg, #173F67, #2F6690);
+    border-radius: 18px;
+    padding: 34px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 24px rgba(23, 63, 103, 0.15);
+}
 
-    div[data-baseweb="select"] > div {
-        border-radius: 9px;
-    }
+.hero-tag {
+    display: inline-block;
+    background-color: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
 
-    /* Buttons */
-    .stButton > button {
-        width: 100%;
-        background: #2f65a7;
-        color: white !important;
-        border: none;
-        border-radius: 9px;
-        padding: 12px 20px;
-        font-size: 17px;
-        font-weight: 650;
-        transition: 0.2s ease;
-    }
+.hero-title {
+    color: white !important;
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+}
 
-    .stButton > button:hover {
-        background: #234f88;
-        border: none;
-        transform: translateY(-1px);
-    }
+.hero-subtitle {
+    color: #E1EDF7 !important;
+    font-size: 16px;
+    margin-top: 12px;
+}
 
-    /* Prediction Result */
-    .result-card {
-        background: linear-gradient(135deg, #effaf5, #f8fffb);
-        border: 1px solid #b9e6cf;
-        border-radius: 16px;
-        padding: 25px;
-        text-align: center;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
 
-    .result-label {
-        color: #438064 !important;
-        font-size: 15px;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
+/* SECTION TITLES */
 
-    .result-value {
-        color: #168653 !important;
-        font-size: 38px;
-        font-weight: 800;
-        margin: 5px 0;
-    }
+.section-title {
+    color: #17365D;
+    font-size: 25px;
+    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
 
-    .result-note {
-        color: #5f806f !important;
-        font-size: 13px;
-    }
+.section-description {
+    color: #68778A;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
 
-    /* Info Box */
-    .info-box {
-        background-color: #f0f6ff;
-        border: 1px solid #c9def8;
-        border-radius: 10px;
-        padding: 14px;
-        color: #315b87 !important;
-        font-size: 13px;
-        margin-top: 15px;
-    }
 
-    /* Sidebar Card */
-    .sidebar-card {
-        background-color: white;
-        border: 1px solid #d8e3f0;
-        border-radius: 12px;
-        padding: 15px;
-        margin-top: 18px;
-    }
+/* INPUT CARD */
 
-    .sidebar-card h4 {
-        color: #1d3557 !important;
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
+.input-card {
+    background-color: white;
+    border: 1px solid #DDE4EC;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(30,50,70,0.05);
+}
 
-    .sidebar-card p {
-        color: #5c6b80 !important;
-        font-size: 13px;
-        line-height: 1.6;
-    }
 
-    /* Footer */
-    .footer {
-        text-align: center;
-        padding: 25px 10px 10px 10px;
-        margin-top: 35px;
-        border-top: 1px solid #dce5f0;
-        color: #78869a !important;
-        font-size: 13px;
-    }
+/* RESULT CARD */
 
-    .footer a {
-        color: #2f65a7 !important;
-        text-decoration: none;
-        font-weight: 600;
-    }
+.result-card {
+    background-color: #F0FBF6;
+    border: 1px solid #B8E4CF;
+    border-radius: 15px;
+    padding: 28px 20px;
+    text-align: center;
+    min-height: 170px;
+}
+
+.result-label {
+    color: #34745B !important;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.result-value {
+    color: #16865B !important;
+    font-size: 34px;
+    font-weight: 700;
+    margin: 12px 0;
+}
+
+.result-note {
+    color: #718096 !important;
+    font-size: 13px;
+}
+
+
+/* BUTTON */
+
+.stButton > button {
+    width: 100%;
+    background-color: #173F67;
+    color: white !important;
+    border: none;
+    border-radius: 9px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    min-height: 48px;
+}
+
+.stButton > button:hover {
+    background-color: #245985;
+}
+
+
+/* ABOUT CARD */
+
+.about-card {
+    background-color: white;
+    border: 1px solid #D8E0EA;
+    border-radius: 13px;
+    padding: 18px;
+    margin-top: 20px;
+}
+
+.about-title {
+    color: #17365D !important;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.about-text {
+    color: #64748B !important;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    color: #7B8794 !important;
+    font-size: 13px;
+    padding-top: 30px;
+    margin-top: 45px;
+    border-top: 1px solid #DCE2E9;
+}
+
+.footer a {
+    color: #173F67 !important;
+    text-decoration: none;
+    font-weight: 600;
+}
 
 </style>
 """, unsafe_allow_html=True)
 
 
-# -------------------------------------------------
-# 3. LOAD MODEL AND SCALER
-# -------------------------------------------------
+# =========================================================
+# LOAD MODEL
+# =========================================================
+
 @st.cache_resource
 def load_artifacts():
-    with open("imdb_ann_model.pkl", "rb") as model_file:
-        model = pickle.load(model_file)
 
-    with open("scaler.pkl", "rb") as scaler_file:
-        scaler = pickle.load(scaler_file)
+    with open("imdb_ann_model.pkl", "rb") as f:
+        model = pickle.load(f)
+
+    with open("scaler.pkl", "rb") as f:
+        scaler = pickle.load(f)
 
     return model, scaler
 
 
 try:
     model, scaler = load_artifacts()
-except Exception as error:
-    st.error("Model files could not be loaded. Please check the model file names.")
+
+except Exception:
+    st.error(
+        "Model files could not be loaded. "
+        "Please check imdb_ann_model.pkl and scaler.pkl."
+    )
     st.stop()
 
 
-# -------------------------------------------------
-# 4. HELPER FUNCTIONS
-# -------------------------------------------------
+# =========================================================
+# INR FORMAT
+# =========================================================
+
 def format_inr(number):
+
     if number >= 10_000_000:
         return f"₹{number / 10_000_000:,.2f} Cr"
+
     elif number >= 100_000:
         return f"₹{number / 100_000:,.2f} Lakh"
-    return f"₹{number:,.2f}"
+
+    else:
+        return f"₹{number:,.2f}"
 
 
-def format_usd(number):
-    if number >= 1_000_000_000:
-        return f"${number / 1_000_000_000:,.2f} Billion"
-    elif number >= 1_000_000:
-        return f"${number / 1_000_000:,.2f} Million"
-    elif number >= 1_000:
-        return f"${number / 1_000:,.2f}K"
-    return f"${number:,.2f}"
+# =========================================================
+# SIDEBAR
+# =========================================================
 
-
-# -------------------------------------------------
-# 5. SIDEBAR
-# -------------------------------------------------
 with st.sidebar:
-    st.markdown("## 🎬 IMDb Movie")
-    st.markdown("## Gross Predictor")
-    st.caption("A simple machine learning tool for box office estimation")
 
-    st.divider()
+    st.markdown(
+        "<h1>🎬 IMDb Movie<br>Gross Predictor</h1>",
+        unsafe_allow_html=True
+    )
 
-    st.markdown("### 🏠 Navigation")
+    st.write(
+        "A simple machine learning tool for "
+        "worldwide box office estimation."
+    )
+
+    st.markdown("---")
+
+    st.subheader("🧭 Navigation")
+
     st.radio(
-        "Choose Section",
-        ["Home", "Prediction", "About"],
+        "Navigation",
+        ["🏠 Home", "📈 Prediction", "ℹ️ About"],
         label_visibility="collapsed"
     )
 
-    st.divider()
+    st.markdown("---")
 
-    st.markdown("### 💱 Currency Settings")
+    st.subheader("💱 Currency Settings")
+
     currency = st.radio(
         "Display Currency",
         ["USD ($)", "INR (₹)"]
@@ -293,65 +302,56 @@ with st.sidebar:
 
     usd_to_inr = 83.0
 
-    st.markdown("""
-    <div class="sidebar-card">
-        <h4>ℹ️ About This Project</h4>
-        <p>
-        This application uses a trained Artificial Neural Network
-        to estimate worldwide movie gross based on historical IMDb data.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="sidebar-card">
-        <h4>📌 Main Predictors</h4>
-        <p>
-        • IMDb Rating<br>
-        • Metascore<br>
-        • Movie Duration<br>
-        • Number of Votes
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="sidebar-card">
-        <h4>🧠 How It Works</h4>
-        <p>
-        1. Enter movie details<br>
-        2. Input values are normalized<br>
-        3. The ANN model generates an estimate<br>
-        4. Result is displayed with currency formatting
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# -------------------------------------------------
-# 6. HERO HEADER
-# -------------------------------------------------
-st.markdown("""
-<div class="hero-card">
-    <div class="hero-badge">● Machine Learning Prediction Tool</div>
-    <h1>🎬 IMDb Movie Gross Predictor</h1>
-    <p>
-        Estimate worldwide box office earnings using historical IMDb data
-        and a trained Artificial Neural Network model.
-    </p>
+    st.markdown(
+        """
+<div class="about-card">
+<div class="about-title">ℹ️ About This Project</div>
+<p class="about-text">
+This application uses a trained Artificial Neural Network
+to estimate worldwide movie gross based on selected IMDb
+movie characteristics.
+</p>
 </div>
-""", unsafe_allow_html=True)
+""",
+        unsafe_allow_html=True
+    )
 
 
-# -------------------------------------------------
-# 7. QUICK PRESETS
-# -------------------------------------------------
-st.markdown("""
-<div class="section-title">⚡ Quick Load Presets</div>
-<div class="section-subtitle">
-Choose a sample movie profile or enter your own values.
+# =========================================================
+# HERO SECTION
+# =========================================================
+
+st.markdown(
+    """
+<div class="hero">
+<div class="hero-tag">● Machine Learning Prediction Tool</div>
+<div class="hero-title">🎬 IMDb Movie Gross Predictor</div>
+<div class="hero-subtitle">
+Estimate worldwide box office earnings using historical IMDb
+data and a trained Artificial Neural Network model.
 </div>
-""", unsafe_allow_html=True)
+</div>
+""",
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# QUICK PRESETS
+# =========================================================
+
+st.markdown(
+    '<div class="section-title">⚡ Quick Load Presets</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="section-description">'
+    'Choose a sample movie profile or enter your own values.'
+    '</div>',
+    unsafe_allow_html=True
+)
+
 
 preset = st.selectbox(
     "Movie Scenario",
@@ -363,46 +363,74 @@ preset = st.selectbox(
     ]
 )
 
+
+# Default values
+
 def_rating = 8.0
 def_meta = 75
 def_dur = 120
 def_votes = 100000
 
+
 if preset == "Blockbuster Action":
+
     def_rating = 8.8
     def_meta = 74
     def_dur = 148
     def_votes = 2400000
 
+
 elif preset == "Critically Acclaimed Drama":
+
     def_rating = 8.5
     def_meta = 92
     def_dur = 130
     def_votes = 500000
 
+
 elif preset == "Indie Low-Budget":
+
     def_rating = 6.8
     def_meta = 60
     def_dur = 95
     def_votes = 25000
 
 
-# -------------------------------------------------
-# 8. INPUT AND RESULT LAYOUT
-# -------------------------------------------------
-input_col, result_col = st.columns([1.05, 0.95], gap="large")
+# =========================================================
+# MOVIE DETAILS
+# =========================================================
+
+st.markdown(
+    '<div class="section-title">🎞️ Movie Details</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="section-description">'
+    'Enter the basic movie information below.'
+    '</div>',
+    unsafe_allow_html=True
+)
 
 
-# -------------------------------------------------
-# 9. MOVIE INPUTS
-# -------------------------------------------------
-with input_col:
-    st.markdown("""
-    <div class="section-title">🎞️ Movie Details</div>
-    <div class="section-subtitle">
-    Enter the basic movie information below.
-    </div>
-    """, unsafe_allow_html=True)
+left_col, right_col = st.columns(
+    [1.35, 0.9],
+    gap="large"
+)
+
+
+# =========================================================
+# LEFT COLUMN
+# =========================================================
+
+with left_col:
+
+    st.markdown(
+        '<div class="input-card">',
+        unsafe_allow_html=True
+    )
+
+    st.markdown("### Movie Features")
 
     imdb_rating = st.slider(
         "⭐ IMDb Rating",
@@ -436,95 +464,125 @@ with input_col:
         step=5000
     )
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    predict_clicked = st.button("📊 Predict Box Office Gross")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
-# -------------------------------------------------
-# 10. RESULT SECTION
-# -------------------------------------------------
-with result_col:
-    st.markdown("""
-    <div class="section-title">📈 Prediction Result</div>
-    <div class="section-subtitle">
-    Your estimated worldwide box office collection will appear here.
-    </div>
-    """, unsafe_allow_html=True)
+# =========================================================
+# RIGHT COLUMN
+# =========================================================
 
-    if predict_clicked:
-        raw_input_data = np.array([
-            [imdb_rating, metascore, duration, votes]
-        ])
+with right_col:
 
-        scaled_data = scaler.transform(raw_input_data)
+    st.markdown("### 📈 Prediction Result")
 
-        prediction = model.predict(scaled_data)
+    st.markdown(
+        """
+<div class="result-card">
+<div class="result-label">PREDICTION PREVIEW</div>
+<div class="result-value">—</div>
+<div class="result-note">
+Enter the movie details and click the prediction button.
+</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
-        final_gross = float(np.asarray(prediction).reshape(-1)[0])
-        final_gross = max(0, final_gross)
 
-        if currency == "INR (₹)":
-            display_value = format_inr(final_gross * usd_to_inr)
-            currency_name = "Indian Rupees"
-        else:
-            display_value = format_usd(final_gross)
-            currency_name = "US Dollars"
+# =========================================================
+# PREDICT BUTTON
+# =========================================================
 
-        st.markdown(f"""
-        <div class="result-card">
-            <div class="result-label">ESTIMATED WORLDWIDE GROSS</div>
-            <div class="result-value">{display_value}</div>
-            <div class="result-note">
-                Estimated value in {currency_name}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
-        st.markdown("### 📝 Movie Input Summary")
+button_col1, button_col2, button_col3 = st.columns(
+    [1, 1.4, 1]
+)
 
-        summary_col1, summary_col2 = st.columns(2)
+with button_col2:
 
-        with summary_col1:
-            st.metric("IMDb Rating", f"{imdb_rating:.1f}/10")
-            st.metric("Duration", f"{duration} minutes")
+    predict_button = st.button(
+        "🚀 Predict Box Office Gross"
+    )
 
-        with summary_col2:
-            st.metric("Metascore", f"{metascore}/100")
-            st.metric("Votes", f"{votes:,}")
 
-        st.markdown("""
-        <div class="info-box">
-        ℹ️ This is an estimated prediction based on historical IMDb data.
-        Actual box office performance may differ because of marketing,
-        audience interest, release timing, competition and other factors.
-        </div>
-        """, unsafe_allow_html=True)
+# =========================================================
+# PREDICTION
+# =========================================================
+
+if predict_button:
+
+    input_data = np.array([
+        [
+            imdb_rating,
+            metascore,
+            duration,
+            votes
+        ]
+    ])
+
+    scaled_data = scaler.transform(input_data)
+
+    prediction = model.predict(scaled_data)
+
+    final_gross = float(
+        np.asarray(prediction).flatten()[0]
+    )
+
+    final_gross = max(0, final_gross)
+
+
+    # Currency
+
+    if currency == "INR (₹)":
+
+        display_value = format_inr(
+            final_gross * usd_to_inr
+        )
+
+        currency_note = "Approximate INR conversion"
 
     else:
-        st.markdown("""
-        <div class="result-card">
-            <div class="result-label">PREDICTION PREVIEW</div>
-            <div class="result-value">—</div>
-            <div class="result-note">
-                Enter the movie details and click the prediction button.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+
+        display_value = f"${final_gross:,.2f}"
+
+        currency_note = "Estimated worldwide gross"
 
 
-# -------------------------------------------------
-# 11. CHART AFTER PREDICTION
-# -------------------------------------------------
-if predict_clicked:
-    st.markdown("---")
+    # =====================================================
+    # RESULT
+    # =====================================================
 
-    st.markdown("""
-    <div class="section-title">📊 Input Feature Overview</div>
-    <div class="section-subtitle">
-    A normalized view of the values supplied to the model.
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        f"""
+<div class="result-card">
+<div class="result-label">
+ESTIMATED WORLDWIDE BOX OFFICE
+</div>
+<div class="result-value">
+{display_value}
+</div>
+<div class="result-note">
+{currency_note}
+</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+
+    # =====================================================
+    # CHART
+    # =====================================================
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown(
+        '<div class="section-title">'
+        '📊 Movie Feature Overview'
+        '</div>',
+        unsafe_allow_html=True
+    )
 
     categories = [
         "IMDb Rating",
@@ -533,71 +591,156 @@ if predict_clicked:
         "Votes"
     ]
 
-    norm_values = [
+    normalized_values = [
         imdb_rating * 10,
         metascore,
         (duration / 300) * 100,
-        min((votes / 1_000_000) * 100, 100)
+        min((votes / 3000000) * 100, 100)
     ]
 
-    fig = go.Figure(
-        data=[
-            go.Bar(
-                x=categories,
-                y=norm_values,
-                marker_color="#3978c7",
-                text=[f"{value:.1f}" for value in norm_values],
-                textposition="outside"
-            )
-        ]
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Bar(
+            x=categories,
+            y=normalized_values,
+            marker_color="#2B6CB0",
+            text=[
+                f"{imdb_rating:.1f}",
+                f"{metascore}",
+                f"{duration} min",
+                f"{votes:,}"
+            ],
+            textposition="outside"
+        )
     )
 
     fig.update_layout(
-        height=350,
+        height=360,
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="white",
         font=dict(
-            family="Arial",
-            color="#34435b"
+            color="#334155",
+            size=13
         ),
         yaxis=dict(
-            title="Normalized Scale (0–100)",
-            range=[0, 115],
-            gridcolor="#e2e8f0"
+            title="Relative Scale (0–100)",
+            range=[0, 110],
+            gridcolor="#E2E8F0",
+            zeroline=False
         ),
         xaxis=dict(
-            gridcolor="#e2e8f0"
+            gridcolor="#FFFFFF"
         ),
         margin=dict(
-            l=20,
-            r=20,
-            t=30,
-            b=20
+            l=40,
+            r=30,
+            t=35,
+            b=40
         )
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
 
-    if final_gross > 100_000_000:
+
+    # =====================================================
+    # MESSAGE
+    # =====================================================
+
+    if final_gross >= 100_000_000:
+
         st.success(
-            "🎉 This movie profile has a high estimated worldwide gross."
+            "🎉 The model estimates a worldwide gross "
+            "above $100 million."
+        )
+
+    elif final_gross >= 50_000_000:
+
+        st.info(
+            "📈 The model estimates a worldwide gross "
+            "above $50 million."
+        )
+
+    else:
+
+        st.info(
+            "📊 Prediction generated successfully using "
+            "the trained ANN model."
         )
 
 
-# -------------------------------------------------
-# 12. FOOTER
-# -------------------------------------------------
-st.markdown("""
+# =========================================================
+# PROJECT INFORMATION
+# =========================================================
+
+st.markdown("---")
+
+col1, col2, col3 = st.columns(3)
+
+
+with col1:
+
+    st.markdown(
+        """
+### 🧠 Model
+
+**Artificial Neural Network (ANN)**
+
+The trained model estimates worldwide
+box office gross from movie features.
+"""
+    )
+
+
+with col2:
+
+    st.markdown(
+        """
+### 📌 Input Features
+
+- IMDb Rating
+- Metascore
+- Duration
+- Votes Count
+"""
+    )
+
+
+with col3:
+
+    st.markdown(
+        """
+### 🛠️ Technologies
+
+- Python
+- Streamlit
+- NumPy
+- Plotly
+- Machine Learning
+"""
+    )
+
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.markdown(
+    """
 <div class="footer">
-    Built with ❤️ using Streamlit and Machine Learning |
-    <a href="https://github.com/AishAftab098" target="_blank">
-        GitHub
-    </a>
-    &nbsp; • &nbsp;
-    <a href="https://www.linkedin.com/in/aish-aftab" target="_blank">
-        LinkedIn
-    </a>
-    <br>
-    IMDb Movie Gross Predictor — Academic Machine Learning Project
+IMDb Movie Gross Predictor
+&nbsp; • &nbsp;
+Built with Streamlit and Machine Learning
+<br><br>
+<a href="https://github.com/AishAftab098"
+target="_blank">GitHub</a>
+&nbsp; • &nbsp;
+<a href="https://www.linkedin.com/in/aish-aftab"
+target="_blank">LinkedIn</a>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True
+)
