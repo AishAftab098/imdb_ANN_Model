@@ -241,11 +241,9 @@ def load_artifacts():
 try:
     model, scaler = load_artifacts()
 
-except Exception:
-    st.error(
-        "Model files could not be loaded. "
-        "Please check imdb_ann_model.pkl and scaler.pkl."
-    )
+except Exception as e:
+    st.error(f"Model loading error: {e}")
+        
     st.stop()
 
 
